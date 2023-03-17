@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Amp\ParallelFunctions;
 use Amp\Promise;
@@ -40,7 +40,7 @@ try {
 
 $average = array_sum($results) / count($results);
 
-$outputFile = $dirName. "result.json";
+$outputFile = $dirName . "result.json";
 file_put_contents($outputFile, json_encode(['average' => $average]));
 
 echo sprintf('Average value = %f calculated and saved to file %s in JSON format<br/>', $average, $outputFile);
