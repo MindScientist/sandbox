@@ -16,7 +16,7 @@ $files = [];
 
 foreach ($xml->Record as $record) {
     $date = (string) $record->attributes()->Date;
-    $rate = (float) str_replace(',', '.', (string) $record->Value);
+    $rate = (double) str_replace(',', '.', (string) $record->Value);
     $result = ['value' => $rate];
     file_put_contents($dirName . $date, json_encode($result, JSON_PRETTY_PRINT));
     $files[] = $dirName . $date;

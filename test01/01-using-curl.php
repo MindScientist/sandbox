@@ -12,13 +12,14 @@ $apiUrl .= '?' . http_build_query($requestParams);
 $response = file_get_contents($apiUrl);
 $xml = simplexml_load_string($response);
 $dirName = __DIR__ . '/quotes/';
+$files = [];
 
 foreach ($xml->Record as $record) {
     $date = (string) $record->attributes()->Date;
     $rate = (double) str_replace(',', '.', (string) $record->Value);
     $result = ['value' => $rate];
     file_put_contents($dirName . $date, json_encode($result, JSON_PRETTY_PRINT));
-    $fileNames[] = $dirName . $date;
+    $files[] = $dirName . $date;
     echo $date . '->' . $rate . '<br/>';
 }
 
@@ -27,7 +28,7 @@ $outputFile = $dirName . 'result.json';
 $multiHandle = curl_multi_init();
 $curlHandles = [];
 
-foreach ($fileNames as $fileName) {
+foreach ($files as $fileName) {
     $url = "file://" . $fileName;
 
     $curlHandle = curl_init($url);
@@ -47,7 +48,7 @@ $results = [];
 foreach ($curlHandles as $curlHandle) {
     $responseJson = curl_multi_getcontent($curlHandle);
     $result = json_decode($responseJson, true);
-    $results[] = (float) $result['value'];
+    $results[] = (double) $result['value'];
 
     curl_multi_remove_handle($multiHandle, $curlHandle);
     curl_close($curlHandle);
